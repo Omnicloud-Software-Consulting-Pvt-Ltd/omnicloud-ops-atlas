@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Workstream__c</fullName>
+    <label>Workstream</label>
+    <referenceTo>OpsAtlas_Workstream__c</referenceTo>
+    <relationshipLabel>OpsAtlas Activities</relationshipLabel>
+    <relationshipName>OpsAtlas_Activities</relationshipName>
+    <required>true</required>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+</CustomField>

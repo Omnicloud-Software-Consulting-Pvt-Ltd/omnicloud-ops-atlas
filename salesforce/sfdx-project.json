@@ -1,0 +1,14 @@
+{
+  "packageDirectories": [
+    {
+      "path": "ops-atlas",
+      "default": true,
+      "package": "OpsAtlas",
+      "versionNumber": "1.0.0.NEXT"
+    }
+  ],
+  "name": "ops-atlas-salesforce",
+  "namespace": "",
+  "sfdcLoginUrl": "https://test.salesforce.com",
+  "sourceApiVersion": "60.0"
+}
