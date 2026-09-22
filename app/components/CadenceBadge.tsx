@@ -3,6 +3,7 @@ import { Cadence, cadenceLabel } from "@/app/data";
 const darkTextCadences: Cadence[] = ["monthly", "quarterly", "annual"];
 
 const bg: Record<Cadence, string> = {
+  "per-project": "bg-cad-per-project",
   daily: "bg-cad-daily",
   weekly: "bg-cad-weekly",
   monthly: "bg-cad-monthly",

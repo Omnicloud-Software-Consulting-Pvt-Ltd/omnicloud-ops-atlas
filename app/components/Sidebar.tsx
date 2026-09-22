@@ -62,6 +62,9 @@ export default function Sidebar() {
           <div className="mb-2 text-[11px] tracking-wide text-muted uppercase">Cadence</div>
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-cad-per-project" /> Per Project
+            </div>
+            <div className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-cad-daily" /> Daily
             </div>
             <div className="flex items-center gap-1.5">

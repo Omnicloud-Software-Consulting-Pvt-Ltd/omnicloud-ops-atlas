@@ -1,4 +1,4 @@
-export type Cadence = "daily" | "weekly" | "monthly" | "quarterly" | "annual";
+export type Cadence = "per-project" | "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 
 export type Raci = {
   r?: string;
@@ -28,7 +28,24 @@ export type Pillar = {
   workstreams: Workstream[];
 };
 
+// Fixed org roles mapped to the person currently holding them. Roles that
+// change per-project or per-engagement (Solutions Architect, Project Lead,
+// QA Lead, etc.) are intentionally left out and shown as role names only.
+// Placeholder names below — swap in real people, or eventually source this
+// from Salesforce (see salesforce/ + ops-atlas-salesforce-plan memory).
+export const roster: Record<string, string> = {
+  "Head of Delivery": "Ananya Rao",
+  "Head of Pre-Sales": "Karthik Menon",
+  "Head of Marketing": "Priya Nair",
+  "Head of HR": "Sanjay Verma",
+  "Head of Finance": "Lakshmi Iyer",
+  "Head of Recruitment": "Divya Shah",
+  "Resourcing Manager": "Arjun Kapoor",
+  "HR Executive": "Meera Pillai",
+};
+
 export const cadenceLabel: Record<Cadence, string> = {
+  "per-project": "Per Project",
   daily: "Daily",
   weekly: "Weekly",
   monthly: "Monthly",
@@ -195,6 +212,33 @@ export const pillars: Pillar[] = [
     name: "Delivery & Consulting Operations",
     group: "Go-to-Market & Delivery",
     workstreams: [
+      {
+        title: "Kickoff: Handover & Staffing",
+        activities: [
+          {
+            name: "Sales-to-delivery handover",
+            note: "Transfer signed SOW, scope, client context & commercials from Pre-Sales to the delivery team",
+            cadence: "per-project",
+            raci: {
+              r: "Solutions Architect",
+              a: "Head of Delivery",
+              c: "Head of Pre-Sales, Delivery Manager",
+              i: "Client Stakeholders",
+            },
+          },
+          {
+            name: "Resource allocation & staffing assignment",
+            note: "HR identifies and assigns available resources to the incoming project",
+            cadence: "per-project",
+            raci: {
+              r: "HR Executive",
+              a: "Head of Delivery",
+              c: "Resourcing Manager, Head of HR",
+              i: "Delivery Manager",
+            },
+          },
+        ],
+      },
       {
         title: "Active Project Delivery",
         activities: [
@@ -500,7 +544,14 @@ export function getPillar(slug: string): Pillar | undefined {
 }
 
 export function cadenceMix(pillar: Pillar): Record<Cadence, number> {
-  const mix: Record<Cadence, number> = { daily: 0, weekly: 0, monthly: 0, quarterly: 0, annual: 0 };
+  const mix: Record<Cadence, number> = {
+    "per-project": 0,
+    daily: 0,
+    weekly: 0,
+    monthly: 0,
+    quarterly: 0,
+    annual: 0,
+  };
   for (const ws of pillar.workstreams) {
     for (const act of ws.activities) {
       mix[act.cadence] += 1;
@@ -511,4 +562,23 @@ export function cadenceMix(pillar: Pillar): Record<Cadence, number> {
 
 export function activityCount(pillar: Pillar): number {
   return pillar.workstreams.reduce((sum, ws) => sum + ws.activities.length, 0);
+}
+
+export function pillarRoster(pillar: Pillar): { role: string; name: string }[] {
+  const seen = new Set<string>();
+  const entries: { role: string; name: string }[] = [];
+  for (const ws of pillar.workstreams) {
+    for (const act of ws.activities) {
+      for (const field of [act.raci.r, act.raci.a, act.raci.c, act.raci.i]) {
+        if (!field) continue;
+        for (const role of field.split(",").map((s) => s.trim())) {
+          if (roster[role] && !seen.has(role)) {
+            seen.add(role);
+            entries.push({ role, name: roster[role] });
+          }
+        }
+      }
+    }
+  }
+  return entries;
 }
