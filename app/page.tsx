@@ -1,7 +1,22 @@
-import { pillars } from "@/app/data";
+import { pillars, Pillar } from "@/app/data";
 import PillarCard from "@/app/components/PillarCard";
 
+function groupPillars(list: Pillar[]) {
+  const groups: { group: string; items: Pillar[] }[] = [];
+  for (const p of list) {
+    const last = groups[groups.length - 1];
+    if (last && last.group === p.group) {
+      last.items.push(p);
+    } else {
+      groups.push({ group: p.group, items: [p] });
+    }
+  }
+  return groups;
+}
+
 export default function OverviewPage() {
+  const groups = groupPillars(pillars);
+
   return (
     <div className="mx-auto max-w-[1000px] px-8 py-11 max-md:px-5 max-md:py-6">
       <div className="mb-2.5 font-mono text-[11.5px] tracking-wide text-accent uppercase">
@@ -20,11 +35,16 @@ export default function OverviewPage() {
         activities with the real ones
       </div>
 
-      <div className="mb-9 grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-3">
-        {pillars.map((p) => (
-          <PillarCard key={p.slug} pillar={p} />
-        ))}
-      </div>
+      {groups.map((g) => (
+        <div key={g.group} className="mb-9">
+          <div className="mb-3 font-mono text-[11px] tracking-wide text-muted uppercase">{g.group}</div>
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-3">
+            {g.items.map((p) => (
+              <PillarCard key={p.slug} pillar={p} />
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

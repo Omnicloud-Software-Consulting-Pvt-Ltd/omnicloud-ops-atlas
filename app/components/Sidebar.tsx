@@ -28,24 +28,31 @@ export default function Sidebar() {
           Overview
         </Link>
         <div className="my-1 h-px bg-border max-md:my-0 max-md:h-5 max-md:w-px" />
-        {pillars.map((p) => {
+        {pillars.map((p, i) => {
           const href = `/pillar/${p.slug}`;
           const active = pathname === href;
+          const showGroupLabel = pillars[i - 1]?.group !== p.group;
           return (
-            <Link
-              key={p.slug}
-              href={href}
-              className={`flex items-center justify-between gap-2.5 rounded-lg border-l-2 px-3 py-2.5 text-[13.5px] font-medium whitespace-nowrap max-md:rounded-md max-md:border-l-0 max-md:border-b-2 max-md:px-2.5 max-md:py-2 ${
-                active
-                  ? "border-accent-strong bg-accent-wash font-semibold text-ink"
-                  : "border-transparent text-ink-2 hover:bg-accent-wash hover:text-ink"
-              }`}
-            >
-              {p.name.split(" & ")[0]}
-              <span className="rounded-full border border-border bg-surface-raised px-1.5 py-px font-mono text-[11px] text-muted">
-                {activityCount(p)}
-              </span>
-            </Link>
+            <div key={p.slug} className="contents">
+              {showGroupLabel && (
+                <div className="mt-2 mb-0.5 px-3 font-mono text-[10px] tracking-wide text-muted uppercase first:mt-0 max-md:hidden">
+                  {p.group}
+                </div>
+              )}
+              <Link
+                href={href}
+                className={`flex items-center justify-between gap-2.5 rounded-lg border-l-2 px-3 py-2.5 text-[13.5px] font-medium whitespace-nowrap max-md:rounded-md max-md:border-l-0 max-md:border-b-2 max-md:px-2.5 max-md:py-2 ${
+                  active
+                    ? "border-accent-strong bg-accent-wash font-semibold text-ink"
+                    : "border-transparent text-ink-2 hover:bg-accent-wash hover:text-ink"
+                }`}
+              >
+                {p.name.split(" & ")[0]}
+                <span className="rounded-full border border-border bg-surface-raised px-1.5 py-px font-mono text-[11px] text-muted">
+                  {activityCount(p)}
+                </span>
+              </Link>
+            </div>
           );
         })}
       </div>
