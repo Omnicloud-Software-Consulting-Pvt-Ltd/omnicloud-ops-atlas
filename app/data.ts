@@ -25,6 +25,9 @@ export type Pillar = {
   name: string;
   head?: string;
   group: string;
+  // Extra roster roles to list in the People panel that don't appear in any
+  // activity's RACI.
+  people?: string[];
   workstreams: Workstream[];
 };
 
@@ -39,6 +42,7 @@ export const roster: Record<string, string> = {
   "Head of Marketing": "Priya Nair",
   "Head of HR": "Sanjay Verma",
   "Head of Finance": "Lakshmi Iyer",
+  "Head of Accounts": "Rahul Desai",
   "Head of Recruitment": "Divya Shah",
   "Resourcing Manager": "Arjun Kapoor",
   "HR Executive": "Meera Pillai",
@@ -466,6 +470,7 @@ export const pillars: Pillar[] = [
     index: "06",
     name: "Finance",
     group: "Finance",
+    people: ["Head of Accounts"],
     workstreams: [
       {
         title: "Transactions & Reconciliation",
@@ -578,6 +583,12 @@ export function pillarRoster(pillar: Pillar): { role: string; name: string }[] {
           }
         }
       }
+    }
+  }
+  for (const role of pillar.people ?? []) {
+    if (roster[role] && !seen.has(role)) {
+      seen.add(role);
+      entries.push({ role, name: roster[role] });
     }
   }
   return entries;
