@@ -1,4 +1,4 @@
-export type Cadence = "per-project" | "daily" | "weekly" | "monthly" | "quarterly" | "annual";
+export type Cadence = "per-project" | "as-needed" | "daily" | "weekly" | "monthly" | "quarterly" | "annual";
 
 export type Raci = {
   r?: string;
@@ -11,6 +11,8 @@ export type Activity = {
   name: string;
   note: string;
   cadence: Cadence;
+  // Due date in plain words, e.g. "7th of every month".
+  deadline?: string;
   raci: Raci;
 };
 
@@ -50,6 +52,7 @@ export const roster: Record<string, string> = {
 
 export const cadenceLabel: Record<Cadence, string> = {
   "per-project": "Per Project",
+  "as-needed": "As Needed",
   daily: "Daily",
   weekly: "Weekly",
   monthly: "Monthly",
@@ -473,19 +476,75 @@ export const pillars: Pillar[] = [
     people: ["Head of Accounts"],
     workstreams: [
       {
-        title: "Transactions & Reconciliation",
+        title: "Daily Accounting",
         activities: [
           {
-            name: "Transaction reconciliation",
-            note: "Match bank & ledger transactions",
+            name: "Vendor invoice booking",
+            note: "Book vendor invoices for the last & current month",
             cadence: "daily",
+            deadline: "Daily",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
+          },
+          {
+            name: "Bank updation",
+            note: "Record bank transactions in the books",
+            cadence: "daily",
+            deadline: "Daily",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
+          },
+          {
+            name: "Cash updation",
+            note: "Record petty cash receipts & payments",
+            cadence: "daily",
+            deadline: "Daily",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
+          },
+          {
+            name: "Accounting books updation",
+            note: "Keep the ledgers up to date",
+            cadence: "daily",
+            deadline: "Daily",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
+          },
+        ],
+      },
+      {
+        title: "Payables & Payments",
+        activities: [
+          {
+            name: "Srinivas monthly payment",
+            note: "Release the fixed monthly payment to Srinivas",
+            cadence: "monthly",
+            deadline: "1st of every month",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
+          },
+          {
+            name: "Vendor payments",
+            note: "Pay vendor invoices falling due",
+            cadence: "monthly",
+            deadline: "5th of every month",
             raci: { r: "Accounts Executive", a: "Head of Finance" },
           },
           {
-            name: "Invoice & expense processing",
-            note: "Process vendor invoices & employee expense claims",
-            cadence: "daily",
-            raci: { r: "Accounts Executive", a: "Head of Finance" },
+            name: "Reimbursement payment",
+            note: "Pay approved employee reimbursement claims",
+            cadence: "monthly",
+            deadline: "5th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Accounts", c: "HR" },
+          },
+          {
+            name: "Airtel bill payment",
+            note: "Pay the monthly Airtel bill",
+            cadence: "monthly",
+            deadline: "16th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
+          },
+          {
+            name: "Office supplies & other payments",
+            note: "Pay for office supplies & ad-hoc expenses",
+            cadence: "as-needed",
+            deadline: "As and when",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
           },
         ],
       },
@@ -493,16 +552,166 @@ export const pillars: Pillar[] = [
         title: "Billing & Collections",
         activities: [
           {
+            name: "Timesheet follow-up & validation",
+            note: "Chase & validate current-month timesheets",
+            cadence: "weekly",
+            deadline: "Weekly",
+            raci: { r: "Accounts Executive", a: "Head of Accounts", c: "Delivery" },
+          },
+          {
+            name: "Invoice preparation",
+            note: "Prepare current-month invoices from validated timesheets",
+            cadence: "monthly",
+            deadline: "30th / 31st of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance", c: "Delivery" },
+          },
+          {
+            name: "Invoice submission to clients",
+            note: "Send last month's invoices to clients",
+            cadence: "monthly",
+            deadline: "1st of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance", i: "Delivery" },
+          },
+          {
             name: "AR / AP aging review",
             note: "Chase overdue receivables, flag payable due dates",
             cadence: "weekly",
+            deadline: "Weekly",
             raci: { r: "Accounts Executive", a: "Head of Finance", i: "Leadership" },
           },
+        ],
+      },
+      {
+        title: "Payroll",
+        activities: [
           {
-            name: "Client billing & timesheet sync",
-            note: "Reconcile billable hours against invoices raised",
+            name: "Attendance validation",
+            note: "Validate current-month attendance for payroll",
             cadence: "weekly",
-            raci: { r: "Accounts Executive", a: "Head of Finance", c: "Delivery" },
+            deadline: "Weekly",
+            raci: { r: "Accounts Executive", a: "Head of Accounts", c: "HR" },
+          },
+          {
+            name: "Salary calculation & preparation",
+            note: "Compute current-month salaries",
+            cadence: "monthly",
+            deadline: "30th / 31st of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance", c: "HR" },
+          },
+          {
+            name: "Salary disbursement",
+            note: "Pay last month's salaries",
+            cadence: "monthly",
+            deadline: "1st of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance", i: "HR" },
+          },
+          {
+            name: "Salary breakup for recruitment",
+            note: "Share salary breakups with HR for new offers",
+            cadence: "as-needed",
+            deadline: "As and when",
+            raci: { r: "Accounts Executive", a: "Head of Finance", c: "HR, Recruitment" },
+          },
+        ],
+      },
+      {
+        title: "Employee Health Insurance",
+        activities: [
+          {
+            name: "Health insurance data preparation",
+            note: "Prepare employee data for the annual policy renewal",
+            cadence: "annual",
+            deadline: "1st March every year",
+            raci: { r: "Accounts Executive", a: "Head of Finance", c: "HR" },
+          },
+          {
+            name: "Health insurance payment processing",
+            note: "Pay the annual group health insurance premium",
+            cadence: "annual",
+            deadline: "1st March every year",
+            raci: { r: "Accounts Executive", a: "Head of Finance", c: "HR" },
+          },
+          {
+            name: "Health insurance data prep – new joiner",
+            note: "Prepare new joiner details for policy addition",
+            cadence: "as-needed",
+            deadline: "As and when",
+            raci: { r: "Accounts Executive", a: "Head of Accounts", c: "HR" },
+          },
+          {
+            name: "Health insurance payment – new joiner",
+            note: "Pay the premium for new joiner additions",
+            cadence: "as-needed",
+            deadline: "As and when",
+            raci: { r: "Accounts Executive", a: "Head of Accounts", c: "HR" },
+          },
+        ],
+      },
+      {
+        title: "Monthly Statutory Compliance",
+        activities: [
+          {
+            name: "TDS calculation & preparation",
+            note: "Compute current-month TDS",
+            cadence: "monthly",
+            deadline: "30th / 31st of every month",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
+          },
+          {
+            name: "EPF calculation & preparation",
+            note: "Compute current-month EPF contributions",
+            cadence: "monthly",
+            deadline: "30th / 31st of every month",
+            raci: { r: "Accounts Executive", a: "Head of Accounts", c: "HR" },
+          },
+          {
+            name: "TDS payment",
+            note: "Deposit last month's TDS",
+            cadence: "monthly",
+            deadline: "7th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance" },
+          },
+          {
+            name: "Professional Tax payment",
+            note: "Pay last month's Professional Tax",
+            cadence: "monthly",
+            deadline: "10th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance" },
+          },
+          {
+            name: "Professional Tax return filing",
+            note: "File last month's Professional Tax return",
+            cadence: "monthly",
+            deadline: "10th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance" },
+          },
+          {
+            name: "GSTR-1 return filing",
+            note: "File last month's invoices in the GST portal",
+            cadence: "monthly",
+            deadline: "11th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance" },
+          },
+          {
+            name: "EPF payment",
+            note: "Deposit last month's EPF",
+            cadence: "monthly",
+            deadline: "15th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance" },
+          },
+          {
+            name: "GST calculation & payment",
+            note: "Compute & pay last month's GST",
+            cadence: "monthly",
+            deadline: "20th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance" },
+          },
+          {
+            name: "GSTR-3B return filing",
+            note: "File last month's GSTR-3B in the GST portal",
+            cadence: "monthly",
+            deadline: "20th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Finance" },
           },
         ],
       },
@@ -510,33 +719,93 @@ export const pillars: Pillar[] = [
         title: "Close & Reporting",
         activities: [
           {
-            name: "Financial close",
-            note: "Close the books & produce monthly statements",
+            name: "Bank reconciliation",
+            note: "Reconcile last month's bank statements with the books",
             cadence: "monthly",
-            raci: { r: "Head of Finance", a: "Leadership" },
+            deadline: "5th of every month",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
+          },
+          {
+            name: "Profit & Loss account updation",
+            note: "Update the monthly P&L",
+            cadence: "monthly",
+            deadline: "Monthly",
+            raci: { r: "Head of Accounts", a: "Head of Finance", i: "Leadership" },
+          },
+          {
+            name: "Balance sheet updation",
+            note: "Update the monthly balance sheet",
+            cadence: "monthly",
+            deadline: "Monthly",
+            raci: { r: "Head of Accounts", a: "Head of Finance", i: "Leadership" },
           },
           {
             name: "Board / investor reporting",
             note: "Prepare quarterly financial & operational reporting pack",
             cadence: "quarterly",
+            deadline: "Quarterly",
             raci: { r: "Head of Finance", a: "Leadership" },
           },
         ],
       },
       {
-        title: "Payroll & Statutory",
+        title: "Annual Tax & Compliance",
         activities: [
           {
-            name: "Payroll processing",
-            note: "Run payroll & statutory deductions",
-            cadence: "monthly",
-            raci: { r: "Head of Finance", a: "Leadership", c: "HR" },
+            name: "Individual tax calculation",
+            note: "Compute individual income tax liabilities",
+            cadence: "annual",
+            deadline: "30th June every year",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
           },
           {
-            name: "Audit & statutory filing",
-            note: "Coordinate the annual audit & regulatory filings",
+            name: "Individual tax filings",
+            note: "File individual income tax returns",
             cadence: "annual",
-            raci: { r: "Head of Finance", a: "Leadership", c: "External Auditor" },
+            deadline: "31st July every year",
+            raci: { r: "Accounts Executive", a: "Head of Accounts" },
+          },
+          {
+            name: "Tax audit details preparation",
+            note: "Prepare schedules & details for the tax audit",
+            cadence: "annual",
+            deadline: "30th September every year",
+            raci: { r: "Head of Accounts", a: "Head of Finance", c: "External Auditor" },
+          },
+          {
+            name: "Tax audit filing",
+            note: "File the tax audit report",
+            cadence: "annual",
+            deadline: "30th September every year",
+            raci: { r: "Head of Accounts", a: "Head of Finance", c: "External Auditor" },
+          },
+          {
+            name: "Corporate financials preparation",
+            note: "Prepare the annual corporate financial statements",
+            cadence: "annual",
+            deadline: "31st October every year",
+            raci: { r: "Head of Accounts", a: "Head of Finance", c: "External Auditor", i: "Leadership" },
+          },
+          {
+            name: "Corporate tax filings",
+            note: "File the corporate income tax return",
+            cadence: "annual",
+            deadline: "31st October every year",
+            raci: { r: "Head of Accounts", a: "Head of Finance", c: "External Auditor" },
+          },
+          {
+            name: "ROC return preparation",
+            note: "Prepare annual ROC returns",
+            cadence: "annual",
+            deadline: "31st October every year",
+            raci: { r: "Head of Accounts", a: "Head of Finance", c: "Company Secretary" },
+          },
+          {
+            name: "ROC return filings",
+            note: "File annual ROC returns",
+            cadence: "annual",
+            deadline: "30th November every year",
+            raci: { r: "Head of Accounts", a: "Head of Finance", c: "Company Secretary" },
           },
         ],
       },
@@ -551,6 +820,7 @@ export function getPillar(slug: string): Pillar | undefined {
 export function cadenceMix(pillar: Pillar): Record<Cadence, number> {
   const mix: Record<Cadence, number> = {
     "per-project": 0,
+    "as-needed": 0,
     daily: 0,
     weekly: 0,
     monthly: 0,
