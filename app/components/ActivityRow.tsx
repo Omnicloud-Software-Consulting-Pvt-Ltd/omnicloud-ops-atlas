@@ -1,4 +1,4 @@
-import { Activity } from "@/app/data";
+import { Activity, cadenceLabel } from "@/app/data";
 import CadenceBadge from "./CadenceBadge";
 import RaciGrid from "./RaciGrid";
 
@@ -10,6 +10,9 @@ export default function ActivityRow({ activity }: { activity: Activity }) {
         <div>
           <div className="mb-0.5 text-sm font-semibold text-ink">{activity.name}</div>
           <div className="text-[12.5px] text-muted">{activity.note}</div>
+          {activity.deadline && activity.deadline.toLowerCase() !== cadenceLabel[activity.cadence].toLowerCase() && (
+            <div className="mt-1 font-mono text-[11px] text-ink-2">Due: {activity.deadline}</div>
+          )}
         </div>
       </div>
       <RaciGrid raci={activity.raci} />

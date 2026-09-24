@@ -4,6 +4,7 @@ const darkTextCadences: Cadence[] = ["monthly", "quarterly", "annual"];
 
 const bg: Record<Cadence, string> = {
   "per-project": "bg-cad-per-project",
+  "as-needed": "bg-cad-as-needed",
   daily: "bg-cad-daily",
   weekly: "bg-cad-weekly",
   monthly: "bg-cad-monthly",
